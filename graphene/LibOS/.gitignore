@@ -1,0 +1,4 @@
+/glibc-*.tar.gz
+/glibc-*.*/
+/glibc-build/
+/build.log

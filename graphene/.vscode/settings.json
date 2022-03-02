@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "typeinfo": "c",
+        "pal_debug.h": "c",
+        "cerrno": "c",
+        "*.tbl": "c",
+        "hurd.h": "c",
+        "if.h": "c",
+        "ifreq.h": "c",
+        "sgx_tls.h": "c",
+        "stdio.h": "c",
+        "ifaddrs.h": "c",
+        "unistd.h": "c",
+        "ioctl.h": "c"
+    }
+}

@@ -1,0 +1,210 @@
+# DO NOT MODIFY. THIS FILE WAS AUTO-GENERATED.
+
+# PyTorch manifest template
+#
+# This manifest was tested on Ubuntu 16.04 and 18.04.
+#
+# Run the application with:
+#
+# ./pal_loader pytorch.manifest pytorchexample.py
+
+# The executable to load in Graphene
+loader.exec = file:/usr/bin/python3
+loader.execname = python3
+loader.insecure__use_cmdline_argv = true
+
+# Graphene environment, including the path to the library OS and the debug
+# option (inline/none)
+loader.preload = file:/home/ubuntu/graphene//Runtime/libsysdb.so
+loader.debug_type = none
+
+# Environment variables
+loader.env.LD_LIBRARY_PATH = /lib:/usr/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu
+
+# Default glibc files, mounted from the Runtime directory in GRAPHENEDIR
+fs.mount.lib.type = chroot
+fs.mount.lib.path = /lib
+fs.mount.lib.uri = file:/home/ubuntu/graphene//Runtime/
+
+# More libraries required by PyTorch
+fs.mount.lib2.type = chroot
+fs.mount.lib2.path = /lib/x86_64-linux-gnu
+fs.mount.lib2.uri = file:/lib/x86_64-linux-gnu
+
+fs.mount.usr.type = chroot
+fs.mount.usr.path = /usr
+fs.mount.usr.uri = file:/usr
+
+# Host-level directory to NSS files required by Glibc + NSS libs
+fs.mount.etc.type = chroot
+fs.mount.etc.path = /etc
+fs.mount.etc.uri = file:/etc
+
+# Workload needs to create temporary files
+fs.mount.tmp.type = chroot
+fs.mount.tmp.path = /tmp
+fs.mount.tmp.uri = file:/tmp
+
+# PyTorch loads its pre-trained models from here
+fs.mount.torch.type = chroot
+fs.mount.torch.path = /root/.cache/torch
+fs.mount.torch.uri = file:/home/ubuntu/.cache/torch
+
+# When run as `pip install --user ...`, pip installs Python packages here
+fs.mount.pip.type = chroot
+fs.mount.pip.path = /root/.local/lib
+fs.mount.pip.uri = file:/home/ubuntu/.local/lib
+
+fs.mount.apt.type = chroot
+fs.mount.apt.path = /etc/apt
+fs.mount.apt.uri = file:/etc/apt
+
+# SGX general options
+
+# Set the virtual memory size of the SGX enclave. For SGX v1, the enclave
+# size must be specified during signing. If the workload needs more virtual memory
+# than the enclave size, Graphene will not be able to allocate it.
+#
+# In particular, libtorch*.so is more than 1G, thus 4G is the minimum to make this run.
+sgx.enclave_size = 2G
+
+# Set the maximum number of enclave threads. For SGX v1, the number of enclave
+# TCSes must be specified during signing, so the application cannot use more
+# threads than the number of TCSes. Note that Graphene also creates an internal
+# thread for handling inter-process communication (IPC), and potentially another
+# thread for asynchronous events. Therefore, the actual number of threads that
+# the application can create is (sgx.thread_num - 2).
+#
+# We (somewhat arbitrarily) specify 16 threads for this workload.
+sgx.thread_num = 16
+
+# SGX trusted libraries
+
+sgx.trusted_files.ld = file:/home/ubuntu/graphene//Runtime/ld-linux-x86-64.so.2
+sgx.trusted_files.libc = file:/home/ubuntu/graphene//Runtime/libc.so.6
+sgx.trusted_files.libdl = file:/home/ubuntu/graphene//Runtime/libdl.so.2
+sgx.trusted_files.libm = file:/home/ubuntu/graphene//Runtime/libm.so.6
+sgx.trusted_files.libpthread = file:/home/ubuntu/graphene//Runtime/libpthread.so.0
+sgx.trusted_files.libresolv = file:/home/ubuntu/graphene//Runtime/libresolv.so.2
+sgx.trusted_files.librt = file:/home/ubuntu/graphene//Runtime/librt.so.1
+sgx.trusted_files.libutil = file:/home/ubuntu/graphene//Runtime/libutil.so.1
+
+sgx.trusted_files.libstdc = file:/usr/lib/x86_64-linux-gnu/libstdc++.so.6
+sgx.trusted_files.libgccs = file:/lib/x86_64-linux-gnu/libgcc_s.so.1
+sgx.trusted_files.libaptpkg = file:/usr/lib/x86_64-linux-gnu/libapt-pkg.so.5.0
+sgx.trusted_files.liblz4 = file:/usr/lib/x86_64-linux-gnu/liblz4.so.1
+sgx.trusted_files.libsystemd = file:/lib/x86_64-linux-gnu/libsystemd.so.0
+sgx.trusted_files.libselinux = file:/lib/x86_64-linux-gnu/libselinux.so.1
+sgx.trusted_files.libgcrypt = file:/lib/x86_64-linux-gnu/libgcrypt.so.20
+sgx.trusted_files.libpcre = file:/lib/x86_64-linux-gnu/libpcre.so.3
+sgx.trusted_files.libgpgerror = file:/lib/x86_64-linux-gnu/libgpg-error.so.0
+sgx.trusted_files.libexpat = file:/lib/x86_64-linux-gnu/libexpat.so.1
+sgx.trusted_files.libz = file:/lib/x86_64-linux-gnu/libz.so.1
+sgx.trusted_files.libz2 = file:/lib/x86_64-linux-gnu/libbz2.so.1.0
+sgx.trusted_files.liblzma = file:/lib/x86_64-linux-gnu/liblzma.so.5
+sgx.trusted_files.libmpdec = file:/usr/lib/x86_64-linux-gnu/libmpdec.so.2
+sgx.trusted_files.libzstd = file:/usr/lib/x86_64-linux-gnu/libzstd.so.1
+sgx.trusted_files.libudev = file:/lib/x86_64-linux-gnu/libudev.so.1
+
+# Ubuntu16.04 sgx.trusted_files.libcrypto = file:/lib/x86_64-linux-gnu/libcrypto.so.1.0.0
+# Ubuntu16.04 sgx.trusted_files.libssl    = file:/lib/x86_64-linux-gnu/libssl.so.1.0.0
+sgx.trusted_files.libcrypto = file:/usr/lib/x86_64-linux-gnu/libcrypto.so.1.1
+sgx.trusted_files.libssl = file:/usr/lib/x86_64-linux-gnu/libssl.so.1.1
+
+# Name Service Switch (NSS) libraries (Glibc dependencies)
+sgx.trusted_files.libnssfiles = file:/lib/x86_64-linux-gnu/libnss_files.so.2
+sgx.trusted_files.libnsscompat = file:/lib/x86_64-linux-gnu/libnss_compat.so.2
+sgx.trusted_files.libnsssystemmd = file:/lib/x86_64-linux-gnu/libnss_systemd.so.2
+sgx.trusted_files.libnssnis = file:/lib/x86_64-linux-gnu/libnss_nis.so.2
+sgx.trusted_files.libnsl = file:/lib/x86_64-linux-gnu/libnsl.so.1
+
+# The script to run
+sgx.trusted_files.script = file:pytorchexample.py
+
+# required by Python package ctypes (lib/python3.6/lib-dynload/ctypes.cpython-36m-x86_64-linux-gnu.so)
+sgx.trusted_files.libffi = file:/usr/lib/x86_64-linux-gnu/libffi.so.6
+
+# File containing the classes, i.e., things the classifier has been trained to distinguish between
+sgx.trusted_files.classes = file:classes.txt
+
+# File containing the pre-trained model
+sgx.trusted_files.torch = file:/home/ubuntu/.cache/torch/hub/checkpoints/alexnet-owt-4df8aa71.pth
+
+# Input image
+sgx.trusted_files.image = file:input.jpg
+
+# Scratch space
+sgx.allowed_files.tmp = file:/tmp
+
+# The workload needs to fork/execve; this allows it to do so
+sgx.trusted_children.fork = file:python3.sig
+
+# Various locations where Python dependencies are found
+sgx.allowed_files.python3 = file:/usr/lib/python3
+sgx.allowed_files.pythonhome = file:/home/ubuntu/.local/lib
+# Ubuntu16.04 sgx.allowed_files.python35 = file:/usr/lib/python3.5
+sgx.allowed_files.python36 = file:/usr/lib/python3.6
+
+# Some Python package wants to access these files on Ubuntu 16.04
+# Ubuntu16.04
+sgx.allowed_files.aptconfd = file:/etc/apt/apt.conf.d
+sgx.allowed_files.dpkg = file:/usr/share/dpkg
+# Ubuntu16.04 sgx.allowed_files.aptconf  = file:/etc/apt/apt.conf
+# Ubuntu16.04 sgx.allowed_files.apport   = file:/etc/default/apport
+
+# Name Service Switch (NSS) files (Glibc reads these files)
+sgx.trusted_files.nsswitch = file:/etc/nsswitch.conf
+sgx.trusted_files.group = file:/etc/group
+sgx.trusted_files.passwd = file:/etc/passwd
+
+# Generated by Graphene
+
+sgx.allow_file_creation = 0
+sgx.enable_stats = 0
+sgx.isvprodid = 0
+sgx.isvsvn = 0
+sgx.sigfile = file:pytorch.sig
+sgx.static_address = 1
+sgx.trusted_checksum.classes = a40d9be82eb4738becd1dd69991b89f87f309975e860a6f3f45395d8c06a7e0d
+sgx.trusted_checksum.exec = 9b56b084b98cbe6dc10d740ad48815b9146a252cbfc3d78e9ffd42a36d965d1f
+sgx.trusted_checksum.group = 75cda86bd0c1cb0c5408d48ab95036a7c624ebdecad7f1c6911d81f4bfd015ba
+sgx.trusted_checksum.image = e34ee398b6b3fdfed5e87befa403b9e9de039ed52791faa5b3609c246649bb02
+sgx.trusted_checksum.ld = f039cce0938ca981cd21bd50096e85acfa5cab18a13e5abb3cc4f7831cfa5cc3
+sgx.trusted_checksum.libaptpkg = 142a465e71f1b52ccfefc44cddf82296af6ff47c731b8ae85ff008df25cd2f3d
+sgx.trusted_checksum.libc = 6ad2d8674058378b6949680f49f45623471e1c3de2e736a94478d31280d81b02
+sgx.trusted_checksum.libcrypto = 274c08ab57bb028ccf0c9657e7bdc7696e60e40ae0b9b3431476ff0975f6d3de
+sgx.trusted_checksum.libdl = a1d16ebae2c8a3d5d610f97a66d05755b30e087b5119c2c76ec7992ab4d38980
+sgx.trusted_checksum.libexpat = f15cdbce5b1b9a0032fe1ab4e17eea95601dd8a6404ba20c98a7103e3089676e
+sgx.trusted_checksum.libffi = 5a675e4f4e40312eebbaf9816e009793a394ae9385115bf10b82b83643f84963
+sgx.trusted_checksum.libgccs = 2f0e486606bd477c6a6ad3588176a16099ed05a8bf47cf3bd27b490bea3d59e9
+sgx.trusted_checksum.libgcrypt = a23935bcafd6333272b0a20d013f6b36e0e8b8b43a5955f7f161b8e53c93fe91
+sgx.trusted_checksum.libgpgerror = 5d50ffb073142206afbbffdb15e271d34ef579e8df11ba7a621f142a3578b8b8
+sgx.trusted_checksum.liblz4 = 47661e023e491330b8b7e28ff60177b26a7f46cb9f66f2080ab0df1f2cb97b3e
+sgx.trusted_checksum.liblzma = ec4d253f7b56017b2e8662d25eccb4373fe0262df148646851c15001d5447968
+sgx.trusted_checksum.libm = 236e94c513167b2394b34a20ca3398b895740b04f8caf3c319746a3c310dcf78
+sgx.trusted_checksum.libmpdec = a08f537ffed55a4c772b7331fba74296f76ea492fd8b04f0ee237ba73791876b
+sgx.trusted_checksum.libnsl = 1e9d34e12277f91290e07d23d356032e513504ba65a8b2817b439a8c160af7ba
+sgx.trusted_checksum.libnsscompat = 1cdade07cb661441bfe9a19122c1914dce77537d02b9fc52dd8e015a796eb3d3
+sgx.trusted_checksum.libnssfiles = 7d1fe3b29c041b1da1829e409a48cea22451890049743f7bae7831b1643f0c07
+sgx.trusted_checksum.libnssnis = 4953ec8006af8408c29ac23ed5d884b8c0eaa51f3de78044a2149ae67a15762b
+sgx.trusted_checksum.libnsssystemmd = 7b095fdbfb3685e7927f944cb82f22d45ae5ee619856498faf4d96116f5e54b5
+sgx.trusted_checksum.libpcre = d14920b8c1cb4e4cbe5f7c9ad23f6d9cf7b4ab1ddce1a29c9fc766b51c29ebea
+sgx.trusted_checksum.libpthread = dc72dc5c689fa0e152a9719c66d4b28df2424a91e12bfab3fff77eb21b240008
+sgx.trusted_checksum.libresolv = 210660e3822e2d4ad2301fcec94bed8977ceac2d5c48a495fcfeb4f148b47b38
+sgx.trusted_checksum.librt = 27313fb7cf030f1bc155867bf0f8ab097d0e1a0921fc2bdc3d37afc4a02bc27d
+sgx.trusted_checksum.libselinux = 1307a5b52d35d96cee2b4fa1bb037b0495ee5c87f1f96727026a718ac4da8b0d
+sgx.trusted_checksum.libssl = c4cb7ffcbb4c20e2b99bc7e84f4bc5a725ca731c23bd7ccdc41e18d69c1c2564
+sgx.trusted_checksum.libstdc = a7ce5e3ab89895f02ad5d55f6b2090c3882ba5f4e12fbd9b96f0ed1712e2a1f6
+sgx.trusted_checksum.libsystemd = 9cee57a5cdbb4d72c2626e08e1e625bf6aea46e6cc3c910e22f8bd23a7b9ed84
+sgx.trusted_checksum.libudev = 7b51fe15603d828caf10b68885af869c4164b658eb7aea6df7410db6739b7e90
+sgx.trusted_checksum.libutil = f86255c9ac6390333f535ebd2b8d677860287054021be566e9ecab663cdeb3f8
+sgx.trusted_checksum.libz = 219c6c0efe93bd6d751bba1e8ae84a162309c665cc5e36beddcf295b72f9bc09
+sgx.trusted_checksum.libz2 = 60955b0bbb05ef2709638573a1bc7d4e022ada79e562f8e2b1db4f108e320f23
+sgx.trusted_checksum.libzstd = 53ef583fe8246537b30f1b01cc6a211f0b8d381d7ffbfb0ee4594a3a7ec40c5c
+sgx.trusted_checksum.nsswitch = 12777818ff758afb0795f6c43ae43e0b042b07c0a7e41f358b73e87b6524a7be
+sgx.trusted_checksum.passwd = f869440b9b09bff249fecce49ca92cb9c6f34023fe96783a889a82ae619b5782
+sgx.trusted_checksum.preload0 = 4650b0fb4bd6656bc424f9660a2ea1834a10063cbbaa30e3f9c8058e789d786c
+sgx.trusted_checksum.script = feb8ea883312d2f66300bef808362f73301d597f8ec40f341c28d3567b4a5653
+sgx.trusted_checksum.torch = 4df8aa717fd11ab2d34e9483c5984ef7cdbefd732366a836076020db08909c9a
+sgx.trusted_mrenclave.fork = 0ca7238a2ea7e4b6e201040cda82c75f4bb5623e5c43026de83f3be787dc539d
+sgx.zero_heap_on_demand = 0
